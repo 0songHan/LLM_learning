@@ -1,0 +1,1319 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../img/AI.jpg">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+    
+    
+      
+        <title>3.1 大模型Prompt-Tuning技术进阶 - 大模型技术开发与应用V2.0</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.975780f9.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="None" data-md-color-accent="None">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#llmprompt-tuning" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="大模型技术开发与应用V2.0" class="md-header__button md-logo" aria-label="大模型技术开发与应用V2.0" data-md-component="logo">
+      
+  <img src="../img/AI.jpg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            大模型技术开发与应用V2.0
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              3.1 大模型Prompt-Tuning技术进阶
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="大模型技术开发与应用V2.0" class="md-nav__button md-logo" aria-label="大模型技术开发与应用V2.0" data-md-component="logo">
+      
+  <img src="../img/AI.jpg" alt="logo">
+
+    </a>
+    大模型技术开发与应用V2.0
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          第一章:大模型背景简介
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="第一章:大模型背景简介" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          第一章:大模型背景简介
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E4%B8%80%E7%AB%A0%EF%BC%9A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%83%8C%E6%99%AF%E7%AE%80%E4%BB%8B/01-LLM%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86.html" class="md-nav__link">
+        1.1 LLM基础知识
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E4%B8%80%E7%AB%A0%EF%BC%9A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%83%8C%E6%99%AF%E7%AE%80%E4%BB%8B/02-LLM%E4%B8%BB%E8%A6%81%E7%B1%BB%E5%88%AB%E6%9E%B6%E6%9E%84.html" class="md-nav__link">
+        1.2 LLM主要架构类别
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          第二章:主流大模型介绍
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="第二章:主流大模型介绍" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          第二章:主流大模型介绍
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E4%BA%8C%E7%AB%A0%EF%BC%9A%E4%B8%BB%E6%B5%81%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/01-ChatGPT%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86.html" class="md-nav__link">
+        2.1 ChatGPT模型原理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E4%BA%8C%E7%AB%A0%EF%BC%9A%E4%B8%BB%E6%B5%81%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/02-LLM%E4%B8%BB%E6%B5%81%E5%BC%80%E6%BA%90%E4%BB%A3%E8%A1%A8%E6%A8%A1%E5%9E%8B.html" class="md-nav__link">
+        2.2 LLM主流开源代表模型
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          第三章:大模型微调主要方式
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="第三章:大模型微调主要方式" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          第三章:大模型微调主要方式
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-%E5%A4%A7%E6%A8%A1%E5%9E%8BPrompt-Tuning%E6%8A%80%E6%9C%AF%E5%85%A5%E9%97%A8.html" class="md-nav__link">
+        3.1 大模型Prompt-Tuning技术入门
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          3.1 大模型Prompt-Tuning技术进阶
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="02-%E5%A4%A7%E6%A8%A1%E5%9E%8BPrompt-Tuning%E6%8A%80%E6%9C%AF%E8%BF%9B%E9%98%B6.html" class="md-nav__link md-nav__link--active">
+        3.1 大模型Prompt-Tuning技术进阶
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    学习目标
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prompt-tuning" class="md-nav__link">
+    面向超大规模模型的Prompt-Tuning
+  </a>
+  
+    <nav class="md-nav" aria-label="面向超大规模模型的Prompt-Tuning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-in-context-learning" class="md-nav__link">
+    1. In-Context Learning(上下文学习)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-instruction-tuning" class="md-nav__link">
+    2. Instruction-Tuning(指令学习)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-chain-of-thought" class="md-nav__link">
+    3. Chain-of-Thought（思维链）
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#peft" class="md-nav__link">
+    PEFT(大模型参数高效微调)
+  </a>
+  
+    <nav class="md-nav" aria-label="PEFT(大模型参数高效微调)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-prefix-tuning" class="md-nav__link">
+    1. Prefix Tuning
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-adapter-tuning" class="md-nav__link">
+    2. Adapter Tuning
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-lora" class="md-nav__link">
+    3. LoRA
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    小结总结
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8%E6%A1%86%E6%9E%B6-LangChain.html" class="md-nav__link">
+        3.1 大模型应用框架-LangChain
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          第四章:大模型提示词工程应用实战
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="第四章:大模型提示词工程应用实战" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          第四章:大模型提示词工程应用实战
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E5%9B%9B%E7%AB%A0%EF%BC%9A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/01-%E5%A4%A7%E6%A8%A1%E5%9E%8BPrompt%E5%B7%A5%E7%A8%8B%E6%8C%87%E5%8D%97.html" class="md-nav__link">
+        4.1 大模型Prompt工程指南
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E5%9B%9B%E7%AB%A0%EF%BC%9A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/02-%E9%87%91%E8%9E%8D%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81%E6%96%B9%E5%90%91%E8%AF%84%E4%BC%B0%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        4.2 金融行业动态方向评估项目介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E5%9B%9B%E7%AB%A0%EF%BC%9A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/03-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB.html" class="md-nav__link">
+        4.3 LLM实现金融文本分类
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E5%9B%9B%E7%AB%A0%EF%BC%9A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/04-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96.html" class="md-nav__link">
+        4.4 LLM实现金融文本信息抽取
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E5%9B%9B%E7%AB%A0%EF%BC%9A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/05-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D.html" class="md-nav__link">
+        4.5 LLM实现金融文本匹配
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          第五章:基于GPT2预训练模型搭建医疗问诊机器人
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="第五章:基于GPT2预训练模型搭建医疗问诊机器人" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          第五章:基于GPT2预训练模型搭建医疗问诊机器人
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E4%BA%94%E7%AB%A0%EF%BC%9A%E5%9F%BA%E4%BA%8EGPT2%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA%E5%8C%BB%E7%96%97%E9%97%AE%E8%AF%8A%E6%9C%BA%E5%99%A8%E4%BA%BA/01-%E5%8C%BB%E7%96%97%E9%97%AE%E8%AF%8A%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9E%E7%8E%B0.html" class="md-nav__link">
+        5.1 医疗问诊机器人实现
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          第六章:新零售行业评价决策系统
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="第六章:新零售行业评价决策系统" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          第六章:新零售行业评价决策系统
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E5%85%AD%E7%AB%A0%EF%BC%9A%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/01-%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        6.1 项目背景介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E5%85%AD%E7%AB%A0%EF%BC%9A%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/02-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        6.2 BERT+PET方式文本分类介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E5%85%AD%E7%AB%A0%EF%BC%9A%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/03-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        6.3 BERT+PET方式数据预处理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E5%85%AD%E7%AB%A0%EF%BC%9A%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/04-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        6.4 BERT+PET方式模型代码实现和训练
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E5%85%AD%E7%AB%A0%EF%BC%9A%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/05-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        6.5 BERT+P-Tuning方式文本分类介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E5%85%AD%E7%AB%A0%EF%BC%9A%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/06-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        6.6 BERT+P-Tuning方式数据预处理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E5%85%AD%E7%AB%A0%EF%BC%9A%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/07-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        6.7 BERT+P-Tuning方式模型代码实现和训练
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          第七章:基于ChatGLM微调实现信息抽取+文本分类的多任务实战
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="第七章:基于ChatGLM微调实现信息抽取+文本分类的多任务实战" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          第七章:基于ChatGLM微调实现信息抽取+文本分类的多任务实战
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E4%B8%83%E7%AB%A0%EF%BC%9A%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/01-%E9%A1%B9%E7%9B%AE%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        7.1 项目整体简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E4%B8%83%E7%AB%A0%EF%BC%9A%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/02-%E5%A4%9A%E4%BB%BB%E5%8A%A1%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html" class="md-nav__link">
+        7.2 多任务数据预处理方式
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E4%B8%83%E7%AB%A0%EF%BC%9A%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/03-LoRA%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        7.3 LoRA方式微调ChatGLM模型代码实现和训练
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E4%B8%83%E7%AB%A0%EF%BC%9A%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/%E8%B6%8B%E5%8A%A8%E4%BA%91%E4%BD%BF%E7%94%A8%E3%80%8A%E8%A1%A5%E5%85%85%E3%80%8B.html" class="md-nav__link">
+        7.4 趋动云使用《扩展》
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          第八章:基于LangChain+ChatGLM-6B实现本地知识问答机器人
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="第八章:基于LangChain+ChatGLM-6B实现本地知识问答机器人" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          第八章:基于LangChain+ChatGLM-6B实现本地知识问答机器人
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E5%85%AB%E7%AB%A0%EF%BC%9A%E5%9F%BA%E4%BA%8ELangChain%2BChatGLM%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E9%97%AE%E7%AD%94%E6%9C%BA%E5%99%A8%E4%BA%BA/01-LangChain%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%85%A5%E9%97%A8.html" class="md-nav__link">
+        8.1 LangChain基础知识回顾
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%AC%AC%E5%85%AB%E7%AB%A0%EF%BC%9A%E5%9F%BA%E4%BA%8ELangChain%2BChatGLM%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E9%97%AE%E7%AD%94%E6%9C%BA%E5%99%A8%E4%BA%BA/02-LangChain%20%2B%20ChatGLM%20%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E5%BA%93%E9%97%AE%E7%AD%94.html" class="md-nav__link">
+        8.2 LangChain+ChatGLM-6B实现本地知识库问答
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    学习目标
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prompt-tuning" class="md-nav__link">
+    面向超大规模模型的Prompt-Tuning
+  </a>
+  
+    <nav class="md-nav" aria-label="面向超大规模模型的Prompt-Tuning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-in-context-learning" class="md-nav__link">
+    1. In-Context Learning(上下文学习)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-instruction-tuning" class="md-nav__link">
+    2. Instruction-Tuning(指令学习)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-chain-of-thought" class="md-nav__link">
+    3. Chain-of-Thought（思维链）
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#peft" class="md-nav__link">
+    PEFT(大模型参数高效微调)
+  </a>
+  
+    <nav class="md-nav" aria-label="PEFT(大模型参数高效微调)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-prefix-tuning" class="md-nav__link">
+    1. Prefix Tuning
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-adapter-tuning" class="md-nav__link">
+    2. Adapter Tuning
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-lora" class="md-nav__link">
+    3. LoRA
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    小结总结
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="llmprompt-tuning">LLM的Prompt-Tuning主流方法<a class="headerlink" href="#llmprompt-tuning" title="Permanent link">&para;</a></h1>
+<hr />
+<h3 id="_1">学习目标<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>了解企业面向超大规模模型的Prompt-Tuning方法类型.</li>
+<li>理解Prefix-Tuning、Adapter-Tuning、LoRA三种大模型参数微调方法的原理</li>
+</ul>
+<hr />
+<h3 id="prompt-tuning">面向超大规模模型的Prompt-Tuning<a class="headerlink" href="#prompt-tuning" title="Permanent link">&para;</a></h3>
+<p>近两年来，随着Prompt-Tuning技术的发展，有诸多工作发现，对于超过10亿参数量的模型来说，Prompt-Tuning所带来的增益远远高于标准的Fine-tuning，小样本甚至是零样本的性能也能够极大地被激发出来，得益于这些模型的 <strong>参数量足够大</strong> ，训练过程中使用了 <strong>足够多的语料</strong> ，同时设计的 <strong>预训练任务足够有效</strong> 。最为经典的大规模语言模型则是2020年提出的GPT-3，其拥有大约1750亿的参数，且发现只需要设计合适的模板或指令即可以 <strong>实现免参数训练的零样本学习</strong> 。</p>
+<hr />
+<p>2022年底到2023年初，国内外也掀起了AIGC的浪潮，典型代表是OpenAI发布的ChatGPT、GPT-4大模型，Google发布的Bard以及百度公司发布的文心一言等。超大规模模型进入新的纪元，而这些轰动世界的产物，离不开强大的Prompt-Tuning技术。本文默认以GPT-3为例，介绍几个面向超大规模的Prompt-Tuning方法，分别为：</p>
+<ul>
+<li><strong>上下文学习 In-Context Learning（ICL）</strong> ：直接挑选少量的训练样本作为该任务的提示；</li>
+<li><strong>指令学习 Instruction-Tuning</strong> ：构建任务指令集，促使模型根据任务指令做出反馈；</li>
+<li><strong>思维链 Chain-of-Thought（CoT）</strong> ：给予或激发模型具有推理和解释的信息，通过线性链式的模式指导模型生成合理的结果。</li>
+</ul>
+<hr />
+<h4 id="1-in-context-learning">1. In-Context Learning(上下文学习)<a class="headerlink" href="#1-in-context-learning" title="Permanent link">&para;</a></h4>
+<p>In-Context learning（ICL）最早在GPT-3中提出， 旨在从训练集中挑选少量的标注样本，设计任务相关的指令形成提示模板，用于指导测试样本生成相应的结果。</p>
+<hr />
+<p>常用的In-context learning方法包括：</p>
+<ul>
+<li>zero-shot learning<ul>
+<li>定义: 给出任务的描述, 然后提供测试数据对其进行预测, 直接让预训练好的模型去进行任务测试. </li>
+<li>示例: 向模型输入“这个任务要求将中文翻译为英文. 销售-&gt;”, 然后要求模型预测下一个输出应该是什么, 正确答案应为“sell”.</li>
+</ul>
+</li>
+<li>one-shot learning<ul>
+<li>定义: 在预训练和真正翻译的样本之间, 插入一个样本做指导. 相当于在预训练好的结果和所要执行的任务之间, 给一个例子, 告诉模型英语翻译为法语, 应该这么翻译. </li>
+<li>示例: 向模型输入“这个任务要求将中文翻译为英文. 你好-&gt;hello, 销售-&gt;”, 然后要求模型预测下一个输出应该是什么, 正确答案应为“sell”. </li>
+</ul>
+</li>
+<li>few-shot learning<ul>
+<li>定义: 在预训练和真正翻译的样本之间, 插入多个样本（一般10-100条）做指导. 相当于在预训练好的结果和所要执行的任务之间, 给多个例子, 告诉模型应该如何工作. </li>
+<li>示例: 向模型输入“这个任务要求将中文翻译为英文. 你好-&gt;hello, 再见-&gt;goodbye, 购买-&gt;purchase, 销售-&gt;”, 然后要求模型预测下一个输出应该是什么, 正确答案应为“sell”. </li>
+</ul>
+</li>
+</ul>
+<p>目前In-context Learning依然与普通的fine-tuning有一定差距，且预测的结果方差很大，同时也需要花费时间考虑template的构建。</p>
+<hr />
+<h4 id="2-instruction-tuning">2. Instruction-Tuning(指令学习)<a class="headerlink" href="#2-instruction-tuning" title="Permanent link">&para;</a></h4>
+<p>面向超大规模模型第二个Prompt技术是指令学习。其实Prompt-Tuning本质上是对下游任务的指令，简单的来说：就是告诉模型需要做什么任务，输出什么内容。上文我们提及到的离散或连续的模板，本质上就是一种对任务的提示。因此，在对大规模模型进行微调时，可以为各种类型的任务定义指令，并进行训练，来提高模型对不同任务的泛化能力。</p>
+<hr />
+<p>什么是Instruction-Tuning? 让我们先抛开脑子里的一切概念，把自己当成一个模型。我给你两个任务：</p>
+<ul>
+<li>1.带女朋友去了一家餐厅，她吃的很开心，这家餐厅太__了！</li>
+<li>2.判断这句话的情感：带女朋友去了一家餐厅，她吃的很开心。选项：A=好，B=一般，C=差</li>
+</ul>
+<ul>
+<li>你觉得哪个任务简单？想象一下：做判别是不是比做生成要容易？<strong>Prompt就是第一种模式，Instruction就是第二种。</strong></li>
+</ul>
+<p>Instruction-Tuning和Prompt-Tuning的核心一样，就是去发掘语言模型本身具备的知识。而他们的不同点就在于:</p>
+<ul>
+<li>Prompt是去激发语言模型的**补全能力**，比如给出上半句生成下半句、或者做完形填空。</li>
+<li>Instruction-Tuning则是激发语言模型的**理解能力**，通过给出更明显的指令/指示，让模型去理解并做出正确的action. </li>
+<li>Promp-Tuningt在没有精调的模型上也能有一定效果，但是Instruct-Tuning则必须对模型精调，让模型知道这种指令模式。</li>
+</ul>
+<hr />
+<p>举例说明:</p>
+<ul>
+<li>例如在对电影评论进行二分类的时候，最简单的提示模板(Prompt)是“. It was [mask].”，但是其并没有突出该任务的具体特性，我们可以为其设计一个能够突出该任务特性的模板(加上Instruction)，例如“The movie review is . It was [mask].”，然后根据mask位置的输出结果通过Verbalizer映射到具体的标签上。这一类具备任务特性的模板可以称之为指令Instruction.</li>
+</ul>
+<hr />
+<p>常见任务的指令模板：</p>
+<div align=center><img src="./assets/1-4-2.png" style="zoom:80%" ><img/></div>
+
+<p>如何实现Instruction-Tuning?</p>
+<div align=center><img src="./assets/1-4-1.png" style="zoom:80%" ><img/></div>
+
+<p>为每个任务设计10个指令模版，测试时看平均和最好的表现.</p>
+<h4 id="3-chain-of-thought">3. Chain-of-Thought（思维链）<a class="headerlink" href="#3-chain-of-thought" title="Permanent link">&para;</a></h4>
+<p>思维链 (Chain-of-thought，CoT) 的概念是在 Google 的论文 "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models" 中被首次提出。思维链（CoT）是一种改进的提示策略，用于提高 LLM 在复杂推理任务中的性能，如算术推理、常识推理和符号推理。</p>
+<hr />
+<p>CoT 没有像 ICL 那样简单地用输入输出对构建提示，而是结合了中间推理步骤，这些步骤可以将最终输出引入提示。简单来说，<strong>思维链是一种离散式提示学习</strong>，更具体地，大模型下的上下文学习（即不进行训练，将例子添加到当前样本输入的前面，让模型一次输入这些文本进行输出完成任务），相比于之前传统的上下文学习（即通过x1,y1,x2,y2,....xtest作为输入来让大模型补全输出ytest），思维链多了中间的推导提示。</p>
+<hr />
+<p>以一个数学题为例：</p>
+<div align=center><img src="./assets/1-4-3.png" style="zoom:85%" ><img/></div>
+
+<ul>
+<li>可以看到模型无法做出正确的回答。但如果说，我们给模型一些关于解题的思路，就像我们数学考试，都会把解题过程写出来再最终得出答案，不然无法得分。CoT 做的就是这件事，示例如下：</li>
+</ul>
+<div align=center><img src="./assets/1-4-4.png" style="zoom:85%" ><img/></div>
+
+<ul>
+<li>
+<p>可以看到，类似的算术题，思维链提示会在给出答案之前，还会自动给出推理步骤：</p>
+<blockquote>
+<p>“罗杰先有5个球，2盒3个网球等于6个，5 + 6 = 11”
+“食堂原来有23个苹果，用了20个，23-20=3；又买了6个苹果，3+6=9</p>
+</blockquote>
+</li>
+</ul>
+<p>上述例子证明了思维链提示给出了正确答案，而直接给出答案的传统提示学习，结果是错的，连很基本的数学计算都做不好。简单来说，语言模型很难将所有的语义直接转化为一个方程，因为这是一个更加复杂的思考过程，但可以通过中间步骤，来更好地推理问题的每个部分。</p>
+<p>CoT分类：</p>
+<ul>
+<li>Few-shot CoT ：是 ICL 的一种特殊情况，它通过融合 CoT 推理步骤，将每个演示〈input，output〉扩充为〈input，CoT，output〉。</li>
+<li>Zero-shot CoT：与 Few-shot CoT 不同 在 prompt 中不包括人工标注的任务演示。相反，它直接生成推理步骤，然后使用生成的 CoT 来导出答案。（其中 LLM 首先由 “Let's think step by step” 提示生成推理步骤，然后由 “Therefore, the answer is” 提示得出最终答案。他们发现，当模型规模超过一定规模时，这种策略会大大提高性能，但对小规模模型无效，显示出显著的涌现能力模式）。  </li>
+</ul>
+<hr />
+<p>一个有效的思维链应该具有以下特点：</p>
+<ul>
+<li><strong>逻辑性</strong>：思维链中的每个思考步骤都应该是有逻辑关系的，它们应该相互连接，从而形成一个完整的思考过程。</li>
+</ul>
+<ul>
+<li><strong>全面性</strong>：思维链应该尽可能地全面和细致地考虑问题，以确保不会忽略任何可能的因素和影响。</li>
+</ul>
+<ul>
+<li><strong>可行性</strong>：思维链中的每个思考步骤都应该是可行的，也就是说，它们应该可以被实际操作和实施。</li>
+</ul>
+<ul>
+<li><strong>可验证性</strong>：思维链中的每个思考步骤都应该是可以验证的，也就是说，它们应该可以通过实际的数据和事实来验证其正确性和有效性。</li>
+</ul>
+<h3 id="peft">PEFT(大模型参数高效微调)<a class="headerlink" href="#peft" title="Permanent link">&para;</a></h3>
+<p>目前在工业界应用大模型主流方式：<strong>参数高效微调方法（Parameter-Efficient Fine-Tuning，PEFT）</strong>，<strong>PEFT 方法仅微调少量或额外的模型参数，固定大部分预训练参数，大大降低了计算和存储成本</strong>，同时最先进的 PEFT 技术也能实现了与全量微调相当的性能。</p>
+<p>该方法可以使 PLM 高效适应各种下游应用任务，而无需微调预训练模型的所有参数，且让大模型在消费级硬件上进行全量微调（Full Fine-Tuning）变得可行。</p>
+<hr />
+<p>目前应用较多的PEFT方法主要分为三大类：</p>
+<ul>
+<li><strong>Prefix/Prompt-Tuning</strong>：在模型的输入或隐层添加 <span class="arithmatex"><span class="MathJax_Preview">k</span><script type="math/tex">k</script></span>个额外可训练的前缀 tokens（这些前缀是连续的伪 tokens，不对应真实的 tokens），只训练这些前缀参数；</li>
+<li><strong>Adapter-Tuning</strong>：将较小的神经网络层或模块插入预训练模型的每一层，这些新插入的神经模块称为 adapter（适配器），下游任务微调时也只训练这些适配器参数；</li>
+<li><strong>LoRA</strong>：通过学习小参数的低秩矩阵来近似模型权重矩阵 <span class="arithmatex"><span class="MathJax_Preview">W</span><script type="math/tex">W</script></span>的参数更新，训练时只优化低秩矩阵参数;</li>
+</ul>
+<p>此外**Huggface 开源的一个高效微调大模型的库PEFT**，该算法库支持上述三类方法，可以直接调用。</p>
+<h4 id="1-prefix-tuning">1. Prefix Tuning<a class="headerlink" href="#1-prefix-tuning" title="Permanent link">&para;</a></h4>
+<p>Prefix-Tuning 在模型输入前添加一个连续的且任务特定的向量序列（continuous task-specific vectors），称之为前缀（prefix）。前缀被视为一系列“虚拟 tokens”，但是它由不对应于真实 tokens 的自由参数组成。与更新所有 PLM 参数的全量微调不同，Prefix-Tuning 固定 PLM 的所有参数，只更新优化特定任务的 prefix。因此，在生产部署时，只需要存储一个大型 PLM 的副本和一个学习到的特定任务的 prefix，每个下游任务只产生非常小的额外的计算和存储开销。</p>
+<div align=center><img src="./assets/1-4-5.png" style="zoom:75%" ><img/></div>
+
+<p>Fine-tuning 更新所有 PLM 参数，并且需要为每个任务存储完整的模型副本。Prefix-tuning 冻结了 PLM 参数并且只优化了 prefix。因此，只需要为每个任务存储特定 prefix，使 Prefix-tuning 模块化且节省存储空间。</p>
+<hr />
+<p>如下图所示，以 GPT2 的自回归语言模型为例，将输入 <span class="arithmatex"><span class="MathJax_Preview">x</span><script type="math/tex">x</script></span> 和输出 <span class="arithmatex"><span class="MathJax_Preview">y</span><script type="math/tex">y</script></span> 拼接为 <span class="arithmatex"><span class="MathJax_Preview">z=[x;y]</span><script type="math/tex">z=[x;y]</script></span> ，经过 LM 的某一层计算隐层表示<span class="arithmatex"><span class="MathJax_Preview">h=[h_1,...,h_i,....,h_n]</span><script type="math/tex">h=[h_1,...,h_i,....,h_n]</script></span> ， <span class="arithmatex"><span class="MathJax_Preview">h_i=LM_Ø(z_i, h&lt;i)</span><script type="math/tex">h_i=LM_Ø(z_i, h<i)</script></span> ，其中， <span class="arithmatex"><span class="MathJax_Preview">X_{idx}</span><script type="math/tex">X_{idx}</script></span> 和<span class="arithmatex"><span class="MathJax_Preview">Y_{idx}​</span><script type="math/tex">Y_{idx}​</script></span>分别为输入和输出序列的索引。</p>
+<p><div align=center><img src="./assets/1-4-6.png" style="zoom:75%" ><img/></div></p>
+<p>Prefix-Tuning 在输入前添加前缀，即<span class="arithmatex"><span class="MathJax_Preview">z=[Prefix,x,y]</span><script type="math/tex">z=[Prefix,x,y]</script></span> ，<span class="arithmatex"><span class="MathJax_Preview">P_{idx}</span><script type="math/tex">P_{idx}</script></span>为前缀序列的索引，<span class="arithmatex"><span class="MathJax_Preview">|P_{idx}|</span><script type="math/tex">|P_{idx}|</script></span> 为前缀的长度。前缀索引对应着由<span class="arithmatex"><span class="MathJax_Preview">θ</span><script type="math/tex">θ</script></span>参数化的向量矩阵 <span class="arithmatex"><span class="MathJax_Preview">P_θ</span><script type="math/tex">P_θ</script></span> ，维度为<span class="arithmatex"><span class="MathJax_Preview">|P_{idx}|×dim(h_i)</span><script type="math/tex">|P_{idx}|×dim(h_i)</script></span>。隐层表示：若索引为前缀索引<span class="arithmatex"><span class="MathJax_Preview">P_{idx}</span><script type="math/tex">P_{idx}</script></span>，直接从  <span class="arithmatex"><span class="MathJax_Preview">P_θ</span><script type="math/tex">P_θ</script></span> 复制对应的向量作为<span class="arithmatex"><span class="MathJax_Preview">h_i</span><script type="math/tex">h_i</script></span> (<strong>在模型每一层都添加前缀向量</strong>)；否则直接通过 LM 计算得到，同时，经过 LM 计算的<span class="arithmatex"><span class="MathJax_Preview">h_i</span><script type="math/tex">h_i</script></span>也依赖于其左侧的前缀参数<span class="arithmatex"><span class="MathJax_Preview">P_θ</span><script type="math/tex">P_θ</script></span> ，即**通过前缀来影响后续的序列隐层激化值**。</p>
+<hr />
+<p>但是直接优化 <span class="arithmatex"><span class="MathJax_Preview">P_θ</span><script type="math/tex">P_θ</script></span> 会导致训练不稳定，通过一个更小的矩阵 <span class="arithmatex"><span class="MathJax_Preview">P_w</span><script type="math/tex">P_w</script></span>和一个更大的前馈神经网络<span class="arithmatex"><span class="MathJax_Preview">MLP_θ</span><script type="math/tex">MLP_θ</script></span> 对<span class="arithmatex"><span class="MathJax_Preview">P_θ</span><script type="math/tex">P_θ</script></span> 进行重参数化: <span class="arithmatex"><span class="MathJax_Preview">P_θ[i,:]=MLP_θ(P_w[i,:])</span><script type="math/tex">P_θ[i,:]=MLP_θ(P_w[i,:])</script></span> 。在训练时，LM 的参数 <span class="arithmatex"><span class="MathJax_Preview">Ø</span><script type="math/tex">Ø</script></span> 被固定，只有前缀参数 <span class="arithmatex"><span class="MathJax_Preview">θ</span><script type="math/tex">θ</script></span> 为可训练的参数。训练完成后，只有前缀<span class="arithmatex"><span class="MathJax_Preview">P_θ</span><script type="math/tex">P_θ</script></span>被保存。</p>
+<hr />
+<p>P-Tuning 与 Prefix-Tuning 的方法思路相似，Prefix-Tuning 是将额外的embedding加在开头，看起来更像模仿Instruction指令，而P-Tuning 位置不固定。Prefix-Tuning 通过在每个层都添加可训练参数，通过MLP初始化，而P-Tuning只在输入的时候加入embedding, 并通过LSTM+MLP初始化.</p>
+<hr />
+<p>Prompt Tuning 方式可以看做是 Prefix Tuning 的简化，只在输入层加入 prompt tokens，并不需要加入 MLP 进行调整来解决难训练的问题.</p>
+<h4 id="2-adapter-tuning">2. Adapter Tuning<a class="headerlink" href="#2-adapter-tuning" title="Permanent link">&para;</a></h4>
+<p>与 Prefix Tuning 和 Prompt Tuning 这类在输入前可训练添加 prompt embedding 参数来以少量参数适配下游任务，<strong>Adapter Tuning 则是在预训练模型内部的网络层之间添加新的网络层或模块来适配下游任务</strong>。</p>
+<hr />
+<p>假设预训练模型函数表示为<span class="arithmatex"><span class="MathJax_Preview">Ø_w(x)</span><script type="math/tex">Ø_w(x)</script></span>，对于 Adapter Tuning ，添加适配器之后模型函数更新为<span class="arithmatex"><span class="MathJax_Preview">Ø_{w,w_0}(x)</span><script type="math/tex">Ø_{w,w_0}(x)</script></span>， <span class="arithmatex"><span class="MathJax_Preview">w</span><script type="math/tex">w</script></span>是预训练模型的参数， <span class="arithmatex"><span class="MathJax_Preview">w_0</span><script type="math/tex">w_0</script></span>是新添加的适配器的参数，在训练过程中， <span class="arithmatex"><span class="MathJax_Preview">w</span><script type="math/tex">w</script></span>被固定，只有 <span class="arithmatex"><span class="MathJax_Preview">w_0</span><script type="math/tex">w_0</script></span>被更新。<span class="arithmatex"><span class="MathJax_Preview">|w_0|&lt;&lt;|w|</span><script type="math/tex">|w_0|<<|w|</script></span> ，这使得不同下游任务只需要添加少量可训练的参数即可，节省计算和存储开销，同时共享大规模预训练模型。</p>
+<div align=center><img src="./assets/1-4-7.png" style="zoom:70%" ><img/></div>
+
+<p>Series Adapter的适配器结构和与 Transformer 的集成如上图所示。适配器模块被添加到每个 Transformer 层两次：多头注意力映射之后和两层前馈神经网络之后。适配器是一个 bottleneck（瓶颈）结构的模块，由一个两层的前馈神经网络（由向下投影矩阵、非线性函数和向上投影矩阵构成）和一个输出输出之间的残差连接组成。</p>
+<h4 id="3-lora">3. LoRA<a class="headerlink" href="#3-lora" title="Permanent link">&para;</a></h4>
+<p>上述Adapter Tuning 方法在 PLM 基础上添加适配器层会引入额外的计算，带来推理延迟问题；而 Prefix Tuning 方法难以优化，其性能随可训练参数规模非单调变化，更根本的是，为前缀保留部分序列长度必然会减少用于处理下游任务的序列长度。因此微软推出了LoRA方法。</p>
+<hr />
+<p>低秩适应（Low-Rank Adaptation）是一种参数高效的微调技术，其核心思想是对大型模型的权重矩阵进行隐式的低秩转换，也就是：通过一个较低维度的表示来近似表示一个高维矩阵或数据集。</p>
+<div align=center><img src="./assets/1-4-8.png" style="zoom:70%" ><img/></div>
+
+<p>基本原理：LoRA技术冻结预训练模型的权重，并在每个Transformer块中注入可训练层（称为秩分解矩阵），即在模型的Linear层的旁边增加一个“旁支”A和B。其中，A将数据从d维降到r维，这个r是LoRA的秩，是一个重要的超参数；B将数据从r维升到d维，B部分的参数初始为0。模型训练结束后，需要将A+B部分的参数与原大模型的参数合并在一起使用。</p>
+<hr />
+<p>python伪代码</p>
+<div class="highlight"><pre><span></span><code><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">768</span> <span class="c1"># 例如，预训练模型的隐藏大小</span>
+<span class="n">output_dim</span> <span class="o">=</span> <span class="mi">768</span> <span class="c1"># 例如，层的输出大小</span>
+<span class="n">rank</span> <span class="o">=</span> <span class="mi">8</span> <span class="c1"># 低秩适应的等级&#39;r&#39;</span>
+<span class="n">W</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># 来自预训练网络的权重，形状为 input_dim x output_dim</span>
+<span class="n">W_A</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">rank</span><span class="p">))</span> <span class="c1"># LoRA权重A</span>
+<span class="n">W_B</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">rank</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">))</span> <span class="c1"># LoRA权重B初始化LoRA权重</span>
+<span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">kaiming_uniform_</span><span class="p">(</span><span class="n">W_A</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="n">W_B</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">regular_forward_matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">W</span><span class="p">):</span>
+  <span class="n">h</span> <span class="o">=</span> <span class="n">x</span> <span class="o">@</span> <span class="n">W</span>
+  <span class="k">return</span> <span class="n">h</span>
+
+<span class="k">def</span> <span class="nf">lora_forward_matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">W_A</span><span class="p">,</span> <span class="n">W_B</span><span class="p">):</span>
+  <span class="n">h</span> <span class="o">=</span> <span class="n">x</span> <span class="o">@</span> <span class="n">W</span> <span class="c1"># 常规矩阵乘法</span>
+  <span class="n">h</span> <span class="o">+=</span> <span class="n">x</span> <span class="o">@</span> <span class="p">(</span><span class="n">W_A</span> <span class="o">@</span> <span class="n">W_B</span><span class="p">)</span> <span class="o">*</span> <span class="n">alpha</span> <span class="c1"># 使用缩放的LoRA权重,alpha缩放因子</span>
+  <span class="k">return</span> <span class="n">h</span>
+</code></pre></div>
+<p>LoRA方法是目前最通用、同时也是效果最好的微调方法之一。</p>
+<hr />
+<h3 id="_2">小结总结<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>本小节主要介绍企业面向超大规模模型的Prompt-Tuning方式进行了原理介绍，以及目前PEFT方式的原理讲解。</li>
+</ul>
+<hr />
+<hr />
+<hr />
+<hr />
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      
+        
+        <a href="01-%E5%A4%A7%E6%A8%A1%E5%9E%8BPrompt-Tuning%E6%8A%80%E6%9C%AF%E5%85%A5%E9%97%A8.html" class="md-footer__link md-footer__link--prev" aria-label="上一页: 3.1 大模型Prompt-Tuning技术入门" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              3.1 大模型Prompt-Tuning技术入门
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8%E6%A1%86%E6%9E%B6-LangChain.html" class="md-footer__link md-footer__link--next" aria-label="下一页: 3.1 大模型应用框架-LangChain" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              3.1 大模型应用框架-LangChain
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\s\\-\uff0c\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version.title": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      
+        <script src="../js/extra.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+  </body>
+</html>
